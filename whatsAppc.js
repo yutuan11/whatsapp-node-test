@@ -49,13 +49,12 @@ client.on('message', msg => {
 });
 
 client.initialize();
-
 //Closing correcily using CTRL+C 
-process.on('SIGINT', async () => {
-  console.log('(SIGINT) Shutting down...');
-  await client.destroy();
-  console.log('client destroyed');
-  process.exit(0);
-});
+// process.on('SIGINT', async () => {
+//   console.log('(SIGINT) Shutting down...');
+//   await client.destroy();
+//   console.log('client destroyed');
+//   process.exit(0);
+// });
 
 module.exports = client;

@@ -1,6 +1,5 @@
 // server.js
 const express = require('express');
-const { Client } = require('whatsapp-web.js');
 const bodyParser = require('body-parser');
 const client = require('./whatsAppc'); // 导入whatsappClient模块
 
@@ -12,14 +11,14 @@ app.post('/send-message', async (req, res) => {
 	const { contactNumber, messageText } = req.body;
 	console.log("contactNumber", contactNumber);
 	try {
-		async function send_number(number, text) {
+		const send_number = async (number, text) => {
 			try {
 				const isRegistered = await client.isRegisteredUser(number);
 				console.log('number', number);
 
 				if (isRegistered) {
 					console.log(number + ' Registered');
-					await client.sendMessage(number, (text + " " ));
+					await client.sendMessage(number, (text + " "));
 				} else {
 					console.log(number + ' no Registered');
 				}
