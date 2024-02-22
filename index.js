@@ -1,7 +1,7 @@
 // server.js
 const express = require('express');
 const bodyParser = require('body-parser');
-const client = require('./whatsAppc'); // 导入whatsappClient模块
+const client = require('./whatsappClient'); // 导入whatsappClient模块
 
 const app = express();
 app.use(bodyParser.json());
