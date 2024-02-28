@@ -6,7 +6,7 @@ const client = require('./whatsappClient'); // 导入whatsappClient模块
 const app = express();
 app.use(bodyParser.json());
 
-
+// 给某人发消息
 app.post('/send-message', async (req, res) => {
 	const { contactNumber, messageText } = req.body;
 	console.log("contactNumber", contactNumber);
@@ -35,6 +35,46 @@ app.post('/send-message', async (req, res) => {
 		res.status(500).json({ success: false, message: 'Failed to send message' });
 	}
 });
+
+// 获取与某人的聊天记录
+app.post('/get-messages', async (req, res) => {
+	const { contactNumber } = req.body;
+	console.log("contactNumber", contactNumber);
+	try {
+		const getMessages = async (number) => {
+			try {
+				const isRegistered = await client.isRegisteredUser(number);
+				console.log('number', number);
+
+				if (isRegistered) {
+					console.log(number + ' Registered');
+					const contact = await client.getChatById(number);
+					const messages = await contact.fetchMessages({ limit: 100 })
+					const messageData = messages.map((message) => ({
+						id: message.id.id,
+						content: message.body,
+						timestamp: message.timestamp,
+						FromMe:message.id.fromMe
+					}));
+					console.log("messageData", messageData);
+				} else {
+					console.log(number + ' no Registered');
+				}
+			} catch (err) {
+				throw new Error(`注册检查报错：${err}`);
+			}
+		}
+
+		await getMessages(contactNumber + "@c.us");
+
+		res.status(200).json({ success: true, message: 'Message get successfully' });
+	} catch (error) {
+		console.error('Error getting message:', error);
+		res.status(500).json({ success: false, message: 'Failed to get message' });
+	}
+});
+
+
 
 
 const PORT = 3000;
